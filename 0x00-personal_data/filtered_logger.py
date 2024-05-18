@@ -32,6 +32,22 @@ def get_logger() -> logging.Logger:
     return logger
 
 
+def get_db() -> connection.MySQLConnection:
+    """
+    Connect to mysql server with environmental vars
+    """
+    username = environ.get("PERSONAL_DATA_DB_USERNAME", "root")
+    password = environ.get("PERSONAL_DATA_DB_PASSWORD", "")
+    db_host = environ.get("PERSONAL_DATA_DB_HOST", "localhost")
+    db_name = environ.get("PERSONAL_DATA_DB_NAME")
+    connector = connection.MySQLConnection(
+        user=username,
+        password=password,
+        host=db_host,
+        database=db_name)
+    return connector
+
+
 class RedactingFormatter(logging.Formatter):
     """ Redacting Formatter class """
     REDACTION = "***"
