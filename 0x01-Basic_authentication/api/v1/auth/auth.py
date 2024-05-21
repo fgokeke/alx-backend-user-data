@@ -50,7 +50,9 @@ class Auth:
         Returns:
             str: Always returns None for now.
         """
-        return None
+        if request is None:
+            return None
+        return request.headers.get('Authorization')
 
     def current_user(self, request=None) -> TypeVar('User'):
         """
