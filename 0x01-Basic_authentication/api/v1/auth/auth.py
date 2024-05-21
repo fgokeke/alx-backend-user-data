@@ -22,13 +22,13 @@ class Auth:
 
         Args:
             path (str): The path to check.
-            excluded_paths (List[str]): A list of paths that do not require authentication.
+            excluded_paths (List[str]): A list of paths that do
+            not require authentication.
 
         Returns:
             bool: Always returns False for now.
         """
         return False
-
 
     def authorization_header(self, request=None) -> str:
         """
@@ -41,7 +41,6 @@ class Auth:
             str: Always returns None for now.
         """
         return None
-
 
     def current_user(self, request=None) -> TypeVar('User'):
         """
