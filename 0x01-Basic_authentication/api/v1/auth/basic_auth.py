@@ -7,7 +7,9 @@ This module defines a BasicAuth class for basic authentication.
 from api.v1.auth.auth import Auth
 import base64
 from models.user import User
-from typing import TypeVar, List
+from typing import TypeVar, List, Tuple
+import re
+import binascii
 
 
 class BasicAuth(Auth):
@@ -61,7 +63,9 @@ class BasicAuth(Auth):
             return None
 
     def extract_user_credentials(
-             self, decoded_base64_authorization_header: str) -> (str, str):
+             self,
+             decoded_base64_authorization_header: str,
+             ) -> Tuple[str, str]:
         """
         Extracts the user email and password from the Base64 decoded value.
 
@@ -73,15 +77,17 @@ class BasicAuth(Auth):
             tuple: A tuple containing the user email and password,
             or (None, None) if invalid.
         """
-        if decoded_base64_authorization_header is None:
-            return None, None
-        if not isinstance(decoded_base64_authorization_header, str):
-            return None, None
-        if ':' not in decoded_base64_authorization_header:
-            return None, None
-
-        email, password = decoded_base64_authorization_header.split(':', 1)
-        return email, password
+        if type(decoded_base64_authorization_header) == str:
+            pattern = r'(?P<user>[^:]+):(?P<password>.+)'
+            field_match = re.fullmatch(
+                pattern,
+                decoded_base64_authorization_header.strip(),
+            )
+            if field_match is not None:
+                user = field_match.group('user')
+                password = field_match.group('password')
+                return user, password
+        return None, None
 
     def user_object_from_credentials(
             self, user_email: str, user_pwd: str) -> TypeVar('User'):
