@@ -6,6 +6,7 @@ This module defines a base Auth class to manage API authentication.
 """
 from flask import request
 from typing import List, TypeVar
+import fnmatch
 
 
 class Auth:
@@ -30,13 +31,13 @@ class Auth:
         """
         if path is None:
             return True
-        if not excluded_paths:
+
+        if excluded_paths is None or not excluded_paths:
             return True
 
-        normalized_path = path if path.endswith('/') else path + '/'
-
-        if normalized_path in excluded_paths:
-            return False
+        for excluded_path in excluded_paths:
+            if fnmatch.fnmatch(path, excluded_path):
+                return False
 
         return True
 
