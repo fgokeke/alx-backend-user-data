@@ -7,6 +7,7 @@ This module defines a base Auth class to manage API authentication.
 from flask import request
 from typing import List, TypeVar
 import fnmatch
+import os
 
 
 class Auth:
@@ -17,6 +18,9 @@ class Auth:
     checking if a path requires authentication, getting the authorization
     header, and getting the current user.
     """
+    def __init__(self):
+        self.session_cookie_name = os.getenv("SESSION_NAME", "_my_session_id")
+
     def require_auth(self, path: str, excluded_paths: List[str]) -> bool:
         """
         Determines if authentication is required for a given path.
@@ -73,3 +77,12 @@ class Auth:
             TypeVar('User'): Always returns None for now.
         """
         return None
+
+    def session_cookie(self, request=None) -> str:
+        """
+        Retrieves the session cookie value from the request.
+        """
+        if request is None:
+            return None
+
+        return request.cookies.get(self.session_cookie_name)
