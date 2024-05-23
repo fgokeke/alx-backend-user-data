@@ -35,7 +35,14 @@ class Auth:
         if excluded_paths is None or not excluded_paths:
             return True
 
+        # Normalize the path to ensure it has a trailing slash for matching
+        if not path.endswith('/'):
+            path += '/'
+
         for excluded_path in excluded_paths:
+            # Normalize the excluded path to ensure it has a trailing slash
+            if not excluded_path.endswith('/'):
+                excluded_path += '/'
             if fnmatch.fnmatch(path, excluded_path):
                 return False
 
