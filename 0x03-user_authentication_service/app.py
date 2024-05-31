@@ -9,24 +9,21 @@ AUTH = Auth()
 
 
 @app.route("/", methods=["GET"])
-def home():
+def home() -> str:
     """Home route returning a JSON payload."""
     return jsonify({"message": "Bienvenue"})
 
 
 @app.route("/users", methods=["POST"])
-def users():
+def users() -> str:
     """POST /users route to register a new user."""
     email = request.form.get('email')
     password = request.form.get('password')
 
-    if not email or not password:
-        return jsonify({"message": "email and password required"}), 400
-
     try:
         user = AUTH.register_user(email, password)
-        return jsonify({"email": user.email, "message": "user created"}), 201
-    except ValueError:
+        return jsonify({"email": user.email, "message": "user created"})
+    except Exception:
         return jsonify({"message": "email already registered"}), 400
 
 
