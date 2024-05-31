@@ -3,7 +3,7 @@
 """
 
 
-import uuid
+from uuid import uuid4
 import bcrypt
 from db import DB
 from user import User
@@ -28,7 +28,7 @@ def _generate_uuid(self) -> str:
     Returns:
        str: A string representation of a new UUID.
     """
-    return str(uuid.uuid4())
+    return str(uuid4())
 
 
 class Auth:
